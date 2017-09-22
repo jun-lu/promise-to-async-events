@@ -55,47 +55,12 @@
 
   import PromiseAsync from "promise-async";
 
-  new PromiseAsync( Promise.resolve("hello") ).start();
-
-````
-
-
-### API
-
-* 链接 fetch
-
-````javascript
-
-  new PromiseAsync( fetch("http://www.baidu.com").then((res)=>{ return res.json() }) )
-  .subscribe((data)=>{
-    //...
+  new PromiseAsync( Promise.resolve("hello") )
+  .merge(Promise.resolve("world"))
+  .subscribe((text)=>{
+    // text = [hello,world]
   })
-  .start()
-
-````
-
-* 链接 jQuery
-
-````javascript
-
-  new PromiseAsync( $.ajax("http://www.baidu.com") )
-  .subscribe((data)=>{
-    //...
-  })
-  .start()
-
-````
-
-* 链接任意 Promise 请求
-
-
-````javascript
-
-  new AsyncEventsEmitter( JSONP("http://www.baidu.com") )
-  .subscribe((data)=>{
-    //...
-  })
-  .start()
+  .start();
 
 ````
 
