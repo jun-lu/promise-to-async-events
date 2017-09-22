@@ -6,7 +6,7 @@ var events = require("events");
 
   Promise to Async life
 
-  --> START_BEFORE ------------------- COMPLETE -
+  --> START ------------------------- COMPLETE -
     |                                          |
     |                                          |---- ERROR
     |                                          |
@@ -15,7 +15,7 @@ var events = require("events");
 */
 
 // 发送之前
-var START_BEFORE = "startBefore";
+var START = "start";
 //进度
 var PROGRESS = "progress";
 //完成
@@ -41,7 +41,7 @@ function PromiseAsync( promise ){
     this.promise = promise;
   }
 
-  this.START_BEFORE = START_BEFORE;
+  this.START = START;
   this.PROGRESS = PROGRESS;
   this.COMPLETE = COMPLETE;
   this.ERROR = ERROR;
@@ -58,7 +58,7 @@ PromiseAsync.prototype.constructor = PromiseAsync;
 /**
  * @param {Object|function}observer
  *  1. subscribe({
- *        onSendBefore:()=>{}
+ *        onStart:()=>{}
  *        onComplete:()=>{}
  *        onProgress:()=>{}
  *        onError:()=>{}
@@ -75,7 +75,7 @@ PromiseAsync.prototype.subscribe = function(observer) {
   }
 
   if(typeof observer == "object"){
-    observer.onSendBefore && this.__on(this.START_BEFORE ,observer.onSendBefore,observer);
+    observer.onStart && this.__on(this.START ,observer.onStart,observer);
     observer.onProgress && this.__on(this.PROGRESS, observer.onProgress,observer);
     observer.onComplete && this.__on(this.COMPLETE, observer.onComplete,observer);
     observer.onError && this.__on(this.ERROR, observer.onError,observer);
@@ -126,7 +126,7 @@ PromiseAsync.prototype.flat = function(fn){
 PromiseAsync.prototype.start = function(){
   if(this.promiseIterator){
     //多个promise
-    this.emit(this.START_BEFORE);
+    this.emit(this.START);
     var iterator = this.promiseIterator;
     //TODO 需要同步执行
     co(this.promiseIterator)
@@ -138,7 +138,7 @@ PromiseAsync.prototype.start = function(){
 
   }else{
     //仅有一个promise
-    this.emit(this.START_BEFORE);
+    this.emit(this.START);
     this.promise.then((data)=>{
       this.emit(this.COMPLETE, data);
     })

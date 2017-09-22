@@ -9,7 +9,7 @@
 
   new PromiseAsync(Promise.resolve("hello"))
   .subscribe({
-    onStartBefore:()=>{
+    onStart:()=>{
       console.log("onStartBefore")
     },
     onComplete:(data)=>{
@@ -35,7 +35,7 @@
 
   subscribe Async events life cycle
 
-  --> START_BEFORE ------------------- COMPLETE -
+  --> START ------------------------- COMPLETE -
     |                                          |
     |                                          |---- ERROR
     |                                          |
