@@ -8,7 +8,7 @@ var PromiseAsync = require("../PromiseAsync");
 describe('PromiseAsync', function() {
 
 
-  describe('test status', function() {
+  it('constructor new PromiseAsync( Promise.resolve(1) )', function() {
 
     new PromiseAsync( Promise.resolve(1) )
     .subscribe((data)=>{
@@ -18,57 +18,95 @@ describe('PromiseAsync', function() {
 
   });
 
+  it('test new PromiseAsync( Promise.reject(1) )', function() {
 
-  describe('test status', function() {
-
-    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
-    .subscribe((data)=>{
-      expect(1).to.be.equal(data[0]);
-      expect(1).to.be.equal(data[1]);
-    })
-    .start()
-
-  });
-
-  describe('test status', function() {
-
-    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
-    .flat((datas)=>{
-      return datas[0] + datas[1];
-    })
-    .subscribe((data)=>{
-      expect(3).to.be.equal(data);
+    new PromiseAsync( Promise.reject(1) )
+    .subscribe({
+      onError:(err)=>{
+        expect(1).to.be.equal(err);
+      }
     })
     .start()
 
   });
 
 
-
-  describe('test status', function() {
+  it('test new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )', function() {
 
     new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
-    .flat((datas)=>{
-      return Promise.resolve( datas[0] + datas[1] );
-    })
-    .subscribe((data)=>{
-      expect(3).to.be.equal(data);
+    .subscribe((a,b)=>{
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
     })
     .start()
 
   });
 
 
-  describe('test status', function() {
+  it('test new PromiseAsync( Promise.reject(1), Promise.resolve(2) )', function() {
+
+    new PromiseAsync( Promise.reject(1), Promise.resolve(2) )
+    .subscribe({
+      onError:(error)=>{
+        expect(1).to.be.equal(error);
+      }
+    })
+    .start()
+
+  });
+
+  it('test new PromiseAsync( Promise.resolve(2), Promise.reject(1) )', function() {
+
+    new PromiseAsync( Promise.resolve(2), Promise.reject(1) )
+    .subscribe({
+      onError:(error)=>{
+        expect(1).to.be.equal(error);
+      }
+    })
+    .start()
+
+  });
+
+
+  it('test flat return value', function() {
 
     new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
-    .flat((datas)=>{
-      return Promise.resolve( datas[0] + datas[1] );
+    .flat((a,b)=>{
+      return a + b;
+    })
+    .subscribe((c)=>{
+      expect(3).to.be.equal(c);
+    })
+    .start()
+
+  });
+
+  it('test flat return promise', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .flat((a,b)=>{
+      return Promise.resolve(a + b);
+    })
+    .subscribe((c)=>{
+      expect(3).to.be.equal(c);
+    })
+    .start()
+
+  });
+
+
+
+
+  it('test .flat().merge()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .flat((a, b)=>{
+      return Promise.resolve( a + b );
     })
     .merge(Promise.resolve(4))
-    .subscribe((datas)=>{
-      expect(3).to.be.equal(data[0]);
-      expect(4).to.be.equal(data[1]);
+    .subscribe((a, b)=>{
+      expect(3).to.be.equal(a);
+      expect(4).to.be.equal(b);
     })
     .start()
 

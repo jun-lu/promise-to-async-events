@@ -18,6 +18,7 @@
     "fsevents":"1.1.2"
   },
   "devDependencies": {
-    "mocha":"*"
+    "mocha":"*",
+    "chai":"*"
   }
 }

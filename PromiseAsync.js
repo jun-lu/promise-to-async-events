@@ -111,7 +111,7 @@ PromiseAsync.prototype.flat = function(fn){
   this.promiseIterator = [new Promise(function(resolve, reject){
     co(promiseIterator)
     .then((datas)=>{
-      resolve(fn(datas))
+      resolve(fn.apply(null, datas))
     })
     .catch((error)=>{
       reject(error)
@@ -131,7 +131,7 @@ PromiseAsync.prototype.start = function(){
     //TODO 需要同步执行
     co(this.promiseIterator)
     .then((datas)=>{
-      this.emit(this.COMPLETE, datas);
+      this.emit.apply(this, [this.COMPLETE].concat(datas));
     }).catch((error)=>{
       this.emit(this.ERROR, error);
     })
@@ -163,10 +163,12 @@ PromiseAsync.prototype.__on = function(type, fn, self){
 function co(iterator){
   return new Promise(function(resolve, reject){
     var datas = [];
+    var errors = []
     var index = 0;
     next(iterator[index]);
     function next(promise){
-      promise.then(function(data){
+      promise
+      .then(function(data){
         if(data instanceof Promise){
           next(data);
         }else{
@@ -177,7 +179,10 @@ function co(iterator){
             resolve(datas);
           }
         }
-      });
+      })
+      .catch(function(error){
+        reject(error)
+      })
     }
   })
 }
