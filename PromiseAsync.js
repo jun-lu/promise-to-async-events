@@ -4,7 +4,7 @@ var events = require("events");
 
 /**
 
-  Promise to Async life
+  Promise to Async Events
 
   --> START ------------------------- COMPLETE -
     |                                          |

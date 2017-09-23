@@ -8,7 +8,7 @@ var PromiseAsync = require("../PromiseAsync");
 describe('PromiseAsync', function() {
 
 
-  it('constructor new PromiseAsync( Promise.resolve(1) )', function() {
+  it('test constructor new PromiseAsync( Promise.resolve(1) )', function() {
 
     new PromiseAsync( Promise.resolve(1) )
     .subscribe((data)=>{

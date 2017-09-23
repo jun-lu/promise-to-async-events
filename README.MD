@@ -10,7 +10,7 @@
   new PromiseAsync(Promise.resolve("hello"))
   .subscribe({
     onStart:()=>{
-      console.log("onStartBefore")
+      console.log("onStart")
     },
     onComplete:(data)=>{
       console.log("onComplete", data)
@@ -23,7 +23,7 @@
 
   /**
     output:
-      onStartBefore
+      onStart
       onComplete, hello
   */
 
@@ -57,8 +57,8 @@
 
   new PromiseAsync( Promise.resolve("hello") )
   .merge(Promise.resolve("world"))
-  .subscribe((text)=>{
-    // text = [hello,world]
+  .subscribe((data1, data2)=>{
+    // data1 = hello, data2=world
   })
   .start();
 
@@ -67,9 +67,9 @@
 ### 方法
 
 
-*  .mrege(Promise)
+*  `mrege(Promise)`
 
-合并Promise操作，与merge之前的Promise并行执行
+合并一个新的 Promise 操作到队列中，并行执行Promise
 
 ````javascript
 
@@ -84,9 +84,9 @@
 
 
 
-* .flat(fn)
+* `flat(fn)`
 
-接口 flat 之前的所有promise值，并可返回 promise对象或普通变量。
+接受 flat 方法之前所有promise值，fn可返回一个值或promise对象
 
 ````javascript
 
