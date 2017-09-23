@@ -38,7 +38,7 @@ function PromiseAsync( promise ){
   if(arguments.length > 1){
     this.promiseIterator = Array.prototype.slice.call(arguments);
   }else{
-    this.promise = promise;
+    this.promise = promise instanceof Promise ? promise : Promise.resolve(promise);
   }
 
   this.START = START;
@@ -112,7 +112,7 @@ PromiseAsync.prototype.merge = function(promise){
 */
 PromiseAsync.prototype.flat = function(fn){
 
-  if(!(typeof fn === "function")){
+  if(typeof fn !== "function"){
     throw ".flat(fn) muse be function, and return value|promise"
   }
 

@@ -6,8 +6,6 @@ var PromiseAsync = require("../PromiseAsync");
 describe('PromiseAsync', function() {
 
 
-  PromiseAsync
-
   it('test START,COMPLETE,PROGRESS,ERROR )', function() {
 
     var promise = new PromiseAsync( Promise.resolve(1) )
@@ -17,6 +15,25 @@ describe('PromiseAsync', function() {
     expect("error").to.be.equal(promise.ERROR);
 
   });
+
+  it('test new PromiseAsync( 1 ) )', function() {
+    new PromiseAsync( 1 )
+    .subscribe((a)=>{
+      expect(1).to.be.equal(a);
+    })
+    .start()
+  });
+
+
+  it('test new PromiseAsync( 1, 2 ) )', function() {
+    new PromiseAsync( 1,2 )
+    .subscribe((a,b)=>{
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
+    })
+    .start()
+  });
+
 
   it('test constructor new PromiseAsync( Promise.resolve(1) )', function() {
 
@@ -247,5 +264,25 @@ describe('PromiseAsync', function() {
   //   })
   // ]).then((a, b)=>{ console.log(a,b) }).catch((e)=>{console.log(e)})
 
+
+/***
+
+  推荐使用 https://github.com/jun-lu/promise-to-async-events
+
+  可以并行，串行，并行+串行的多种组合方式
+
+  ````javascript
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2))
+    .flat((n1, n2)=>{
+      return Promise.resolve(n1 + n2);
+    })
+    .subscribe((data)=>{
+      // data=3...
+    })
+    .start()
+
+  ````
+*/
 
 });

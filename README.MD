@@ -73,7 +73,7 @@
 
 * `flat(function)`
 
-.flat方法的function参数接收，flat方法之前所有promise值，fn可返回一个值或promise对象
+.flat方法的function参数接收flat方法调用之前所有promise值，function可返回一个值或promise对象
 
 ````javascript
 
