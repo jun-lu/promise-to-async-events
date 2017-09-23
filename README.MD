@@ -73,7 +73,7 @@
 
 ````javascript
 
-    new AsyncEventsEmitter( JSONP("http://www.baidu.com") )
+    new PromiseAsync( JSONP("http://www.baidu.com") )
     .mrege(JSONP("xxxx"))
     .subscribe((data1, data2)=>{
       //...
@@ -90,7 +90,7 @@
 
 ````javascript
 
-  new AsyncEventsEmitter( Promise.resolve(1), Promise.resolve(2))
+  new PromiseAsync( Promise.resolve(1), Promise.resolve(2))
   .flat((n1, n2)=>{
     return Promise.resolve(n1 + n2);
   })

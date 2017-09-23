@@ -1,8 +1,16 @@
 {
   "name": "promise-to-async-events",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "multiple promise transfrom async events",
   "main": "./PromiseAsync.js",
+  "keyWords":[
+    "promise",
+    "promise async",
+    "subscribe",
+    "promise all",
+    "promise to events",
+    "async to events"
+  ],
   "scripts": {
     "start": "node server.js",
     "test": "mocha ./test/PromiseAsync.spec.js"

@@ -112,4 +112,98 @@ describe('PromiseAsync', function() {
 
   });
 
+  it('test .flat().flat().merge()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .flat(function(a, b){
+      return Promise.resolve( a + b );
+    })
+    .flat(function(a){
+      return a+1;
+    })
+    .merge(Promise.resolve(4))
+    .subscribe(function(a, b){
+      expect(4).to.be.equal(a);
+      expect(4).to.be.equal(b);
+    })
+    .start()
+
+  });
+
+
+  it('test .merge().merge()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .merge(Promise.resolve(3))
+    .merge(Promise.resolve(4))
+    .subscribe(function(a, b, c, d){
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
+      expect(3).to.be.equal(c);
+      expect(4).to.be.equal(d);
+    })
+    .start()
+
+  });
+
+
+  it('test .subscribe().subscribe()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .merge(Promise.resolve(3))
+    .merge(Promise.resolve(4))
+    .subscribe(function(a, b, c, d){
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
+      expect(3).to.be.equal(c);
+      expect(4).to.be.equal(d);
+    })
+    .subscribe(function(a, b, c, d){
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
+      expect(3).to.be.equal(c);
+      expect(4).to.be.equal(d);
+    })
+    .start()
+
+  });
+
+  it('test .subscribe({}).subscribe({})', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .merge(Promise.resolve(3))
+    .merge(Promise.resolve(4))
+    .subscribe({
+      onStart:function(){
+        expect(1).to.be.equal(1);
+      },
+      onComplete:function(a,b,c,d){
+        expect(1).to.be.equal(a);
+        expect(2).to.be.equal(b);
+        expect(3).to.be.equal(c);
+        expect(4).to.be.equal(d);
+      },
+      onError:function(){
+
+      }
+    })
+    .subscribe({
+      onStart:function(){
+        expect(1).to.be.equal(1);
+      },
+      onComplete:function(a,b,c,d){
+        expect(1).to.be.equal(a);
+        expect(2).to.be.equal(b);
+        expect(3).to.be.equal(c);
+        expect(4).to.be.equal(d);
+      },
+      onError:function(){
+
+      }
+    })
+    .start()
+
+  });
+
+
 });

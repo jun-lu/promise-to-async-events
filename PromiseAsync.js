@@ -103,7 +103,7 @@ PromiseAsync.prototype.merge = function(promise){
 }
 
 /**
-  * @param {fn} fn(datas)
+  * @param {fn} fn(a,b,c)
   *
 */
 PromiseAsync.prototype.flat = function(fn){
@@ -146,7 +146,7 @@ PromiseAsync.prototype.start = function(){
       self.emit(self.COMPLETE, data);
     })
     .catch(function(error){
-      this.emit(self.ERROR, error);
+      self.emit(self.ERROR, error);
     })
   }
 }
