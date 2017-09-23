@@ -94,6 +94,18 @@ describe('PromiseAsync', function() {
 
   });
 
+  it('test new PromiseAsync( 1 ).flat()', function() {
+
+    new PromiseAsync( 1 )
+    .flat(function(a){
+      return a + 1;
+    })
+    .subscribe(function(c){
+      expect(2).to.be.equal(c);
+    })
+    .start()
+
+  });
 
   it('test flat return value', function() {
 

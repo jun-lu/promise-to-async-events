@@ -1,6 +1,6 @@
 {
   "name": "promise-to-async-events",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "multiple promise transfrom async events",
   "main": "./PromiseAsync.js",
   "keyWords":[

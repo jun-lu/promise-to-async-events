@@ -116,7 +116,8 @@ PromiseAsync.prototype.flat = function(fn){
     throw ".flat(fn) muse be function, and return value|promise"
   }
 
-  let promiseIterator = this.promiseIterator;
+  var promiseIterator = this.promiseIterator || [this.promise];
+  
   this.promiseIterator = [new Promise(function(resolve, reject){
     Promise.all(promiseIterator)
     .then(function(datas){
