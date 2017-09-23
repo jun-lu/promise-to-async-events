@@ -110,10 +110,10 @@ PromiseAsync.prototype.flat = function(fn){
   let promiseIterator = this.promiseIterator;
   this.promiseIterator = [new Promise(function(resolve, reject){
     co(promiseIterator)
-    .then((datas)=>{
+    .then(function(datas){
       resolve(fn.apply(null, datas))
     })
-    .catch((error)=>{
+    .catch(function(error){
       reject(error)
     })
   })];
@@ -124,26 +124,29 @@ PromiseAsync.prototype.flat = function(fn){
  * 启动
  */
 PromiseAsync.prototype.start = function(){
+
+  var self = this;
+
   if(this.promiseIterator){
     //多个promise
-    this.emit(this.START);
+    self.emit(this.START);
     var iterator = this.promiseIterator;
     //TODO 需要同步执行
-    co(this.promiseIterator)
-    .then((datas)=>{
-      this.emit.apply(this, [this.COMPLETE].concat(datas));
-    }).catch((error)=>{
-      this.emit(this.ERROR, error);
+    co(self.promiseIterator)
+    .then(function(datas){
+      self.emit.apply(self, [self.COMPLETE].concat(datas));
+    }).catch(function(error){
+      self.emit(self.ERROR, error);
     })
 
   }else{
     //仅有一个promise
-    this.emit(this.START);
-    this.promise.then((data)=>{
-      this.emit(this.COMPLETE, data);
+    this.emit(self.START);
+    this.promise.then(function(data){
+      self.emit(self.COMPLETE, data);
     })
-    .catch((error)=>{
-      this.emit(this.ERROR, error);
+    .catch(function(error){
+      this.emit(self.ERROR, error);
     })
   }
 }

@@ -33,7 +33,7 @@
 
 ````javascript
 
-  subscribe Async events life cycle
+  promise to Async events `onStart, onComplete, onProgress, onERROR`
 
   --> START ------------------------- COMPLETE -
     |                                          |
