@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/promise-to-async-events.svg)](https://badge.fury.io/js/promise-to-async-events) [![npm downloads](https://img.shields.io/npm/dm/promise-to-async-events.svg?style=flat-square)](https://www.npmjs.com/package/promise-to-async-events)
 
 
-`promise-to-async-events` 可以方便的包装多个Promise，并最终作为异步事件发送给一个或多个观察者
+`promise-to-async-events` 可以方便的包装多个Promise，并可添加多个观察者捕获其执行过程
 
 ### Example
 
@@ -72,9 +72,9 @@
 ### 方法
 
 
-*  `mrege(Promise)`
+*  `mrege(promise)`
 
-合并一个新的 Promise 操作到队列中，并行执行Promise
+合并一个新的 promise 操作到队列中，start方法调用后并行执行队列中的promise
 
 ````javascript
 
@@ -89,9 +89,9 @@
 
 
 
-* `flat(fn)`
+* `flat(function)`
 
-接受 flat 方法之前所有promise值，fn可返回一个值或promise对象
+.flat方法的function参数接收，flat方法之前所有promise值，fn可返回一个值或promise对象
 
 ````javascript
 
@@ -105,6 +105,24 @@
   .start()
 
 ````
+
+*  `.subscribe(function|observer)`
+
+添加观察者,如果参数是函数，那么默认监听 onComplete 事件。如果参数是对象，可包含`onStart, onComplete, onProgress, onError` 4方法事件个事件
+
+````javascript
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .subscribe({
+      onStart:()=>{},
+      onComplete:(a,b)=>{/*a=1,b=2*/},
+      onProgress:{}=>{},
+      onError:{}=>{}
+    })
+    .start()
+
+````
+
 
 * start()
 
