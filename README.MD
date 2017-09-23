@@ -1,9 +1,13 @@
 # promise-to-async-events
 
+
 [![Build Status](https://travis-ci.org/jun-lu/promise-to-async-events.svg?branch=master)](https://travis-ci.org/jun-lu/promise-to-async-events)
 [![npm version](https://badge.fury.io/js/promise-to-async-events.svg)](https://badge.fury.io/js/promise-to-async-events) [![npm downloads](https://img.shields.io/npm/dm/promise-to-async-events.svg?style=flat-square)](https://www.npmjs.com/package/promise-to-async-events)
 
+
 `promise-to-async-events` 可以方便的包装多个Promise，并最终作为异步事件发送给一个或多个观察者
+
+### Example
 
 ````javascript
 
@@ -29,11 +33,12 @@
 
 ````
 
+
 ### 异步动作生命周期
 
 ````javascript
 
-  promise to Async events `onStart, onComplete, onProgress, onERROR`
+  promise to Async events `onStart, onComplete, onProgress, onError`
 
   --> START ------------------------- COMPLETE -
     |                                          |

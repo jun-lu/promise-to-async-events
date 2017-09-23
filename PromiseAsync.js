@@ -64,17 +64,17 @@ PromiseAsync.prototype.constructor = PromiseAsync;
  *        onError:()=>{}
  *      })
  *
- *  2. subscribe(()=>{ console.log("SUCCESS") })
+ *  2. subscribe(()=>{ console.log("onComplete") })
  */
 
 PromiseAsync.prototype.subscribe = function(observer) {
 
-  if(typeof observer == "function"){
+  if(typeof observer === "function"){
     this.__on(this.COMPLETE, observer);
     return this;
   }
 
-  if(typeof observer == "object"){
+  if(typeof observer === "object"){
     observer.onStart && this.__on(this.START ,observer.onStart,observer);
     observer.onProgress && this.__on(this.PROGRESS, observer.onProgress,observer);
     observer.onComplete && this.__on(this.COMPLETE, observer.onComplete,observer);
@@ -93,6 +93,10 @@ PromiseAsync.prototype.subscribe = function(observer) {
   */
 PromiseAsync.prototype.merge = function(promise){
 
+  if(!promise || !(promise instanceof Promise)){
+    throw ".merge() must be Promise";
+  }
+
   if(!this.promiseIterator){
     this.promiseIterator = [this.promise]
   }
@@ -107,6 +111,11 @@ PromiseAsync.prototype.merge = function(promise){
   *
 */
 PromiseAsync.prototype.flat = function(fn){
+
+  if(!(typeof fn === "function")){
+    throw ".flat(fn) muse be function, and return value|promise"
+  }
+
   let promiseIterator = this.promiseIterator;
   this.promiseIterator = [new Promise(function(resolve, reject){
     co(promiseIterator)
@@ -129,23 +138,29 @@ PromiseAsync.prototype.start = function(){
 
   if(this.promiseIterator){
     //多个promise
-    self.emit(this.START);
+    self.emit(self.START);
+    self.emit(self.PROGRESS, 0);
     var iterator = this.promiseIterator;
     //TODO 需要同步执行
     co(self.promiseIterator)
     .then(function(datas){
+      self.emit(self.PROGRESS, 100);
       self.emit.apply(self, [self.COMPLETE].concat(datas));
     }).catch(function(error){
+      self.emit(self.PROGRESS, 100);
       self.emit(self.ERROR, error);
     })
 
   }else{
     //仅有一个promise
     this.emit(self.START);
+    self.emit(self.PROGRESS, 0);
     this.promise.then(function(data){
+      self.emit(self.PROGRESS, 100);
       self.emit(self.COMPLETE, data);
     })
     .catch(function(error){
+      self.emit(self.PROGRESS, 100);
       self.emit(self.ERROR, error);
     })
   }

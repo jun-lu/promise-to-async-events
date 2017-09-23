@@ -3,10 +3,20 @@ var expect = chai.expect;
 var should = chai.should();
 var PromiseAsync = require("../PromiseAsync");
 
-// var  a = new PromiseAsync( Promise.resolve(1) )
-
 describe('PromiseAsync', function() {
 
+
+  PromiseAsync
+
+  it('test START,COMPLETE,PROGRESS,ERROR )', function() {
+
+    var promise = new PromiseAsync( Promise.resolve(1) )
+    expect("start").to.be.equal(promise.START);
+    expect("complete").to.be.equal(promise.COMPLETE);
+    expect("progress").to.be.equal(promise.PROGRESS);
+    expect("error").to.be.equal(promise.ERROR);
+
+  });
 
   it('test constructor new PromiseAsync( Promise.resolve(1) )', function() {
 
@@ -170,14 +180,25 @@ describe('PromiseAsync', function() {
 
   it('test .subscribe({}).subscribe({})', function() {
 
+    var start1 = 0;
+    var start2 = 0;
+
+    var progress1 = 0;
+    var progress2 = 0;
+
     new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
     .merge(Promise.resolve(3))
     .merge(Promise.resolve(4))
     .subscribe({
       onStart:function(){
-        expect(1).to.be.equal(1);
+        start1 = 1;
+      },
+      onProgress:function(){
+        progress1 = 1;
       },
       onComplete:function(a,b,c,d){
+        expect(1).to.be.equal(start1);
+        expect(1).to.be.equal(progress1);
         expect(1).to.be.equal(a);
         expect(2).to.be.equal(b);
         expect(3).to.be.equal(c);
@@ -189,9 +210,14 @@ describe('PromiseAsync', function() {
     })
     .subscribe({
       onStart:function(){
-        expect(1).to.be.equal(1);
+        start2 = 1;
+      },
+      onProgress:function(){
+        progress2 = 1;
       },
       onComplete:function(a,b,c,d){
+        expect(1).to.be.equal(start2);
+        expect(1).to.be.equal(progress2);
         expect(1).to.be.equal(a);
         expect(2).to.be.equal(b);
         expect(3).to.be.equal(c);
