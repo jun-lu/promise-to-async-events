@@ -71,24 +71,6 @@
 
 ### 方法
 
-
-*  `mrege(promise)`
-
-合并一个新的 promise 操作到队列中，start方法调用后并行执行队列中的promise
-
-````javascript
-
-    new PromiseAsync( JSONP("http://www.baidu.com") )
-    .mrege(JSONP("xxxx"))
-    .subscribe((data1, data2)=>{
-      //...
-    })
-    .start()
-
-````
-
-
-
 * `flat(function)`
 
 .flat方法的function参数接收，flat方法之前所有promise值，fn可返回一个值或promise对象
@@ -118,6 +100,22 @@
       onComplete:(a,b)=>{/*a=1,b=2*/},
       onProgress:{}=>{},
       onError:{}=>{}
+    })
+    .start()
+
+````
+
+
+*  `mrege(promise)`
+
+合并一个新的 promise 操作到队列中，start方法调用后并行执行队列中的promise
+
+````javascript
+
+    new PromiseAsync( JSONP("http://www.baidu.com") )
+    .mrege(JSONP("xxxx"))
+    .subscribe((data1, data2)=>{
+      //...
     })
     .start()
 

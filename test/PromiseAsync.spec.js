@@ -232,4 +232,20 @@ describe('PromiseAsync', function() {
   });
 
 
+  // Promise.all([
+  //   new Promise((resolve, reject)=>{
+  //     setTimeout(()=>{
+  //       console.log(1)
+  //       resolve(1)
+  //     }, 1000)
+  //   }),
+  //   new Promise((resolve, reject)=>{
+  //     setTimeout(()=>{
+  //       console.log(2)
+  //       resolve(2)
+  //     })
+  //   })
+  // ]).then((a, b)=>{ console.log(a,b) }).catch((e)=>{console.log(e)})
+
+
 });

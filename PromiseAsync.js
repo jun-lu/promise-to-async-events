@@ -118,7 +118,7 @@ PromiseAsync.prototype.flat = function(fn){
 
   let promiseIterator = this.promiseIterator;
   this.promiseIterator = [new Promise(function(resolve, reject){
-    co(promiseIterator)
+    Promise.all(promiseIterator)
     .then(function(datas){
       resolve(fn.apply(null, datas))
     })
@@ -141,8 +141,7 @@ PromiseAsync.prototype.start = function(){
     self.emit(self.START);
     self.emit(self.PROGRESS, 0);
     var iterator = this.promiseIterator;
-    //TODO 需要同步执行
-    co(self.promiseIterator)
+    Promise.all(self.promiseIterator)
     .then(function(datas){
       self.emit(self.PROGRESS, 100);
       self.emit.apply(self, [self.COMPLETE].concat(datas));
@@ -175,36 +174,6 @@ PromiseAsync.prototype.__on = function(type, fn, self){
     fn.apply(self, arguments)
   })
 }
-
-
-
-function co(iterator){
-  return new Promise(function(resolve, reject){
-    var datas = [];
-    var errors = []
-    var index = 0;
-    next(iterator[index]);
-    function next(promise){
-      promise
-      .then(function(data){
-        if(data instanceof Promise){
-          next(data);
-        }else{
-          datas.push(data);
-          if(iterator[++index]){
-            next(iterator[index]);
-          }else{
-            resolve(datas);
-          }
-        }
-      })
-      .catch(function(error){
-        reject(error)
-      })
-    }
-  })
-}
-
 
 
 module.exports = PromiseAsync;
