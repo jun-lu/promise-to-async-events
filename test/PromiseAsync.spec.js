@@ -18,7 +18,7 @@ describe('PromiseAsync', function() {
 
   it('test new PromiseAsync( 1 ) )', function() {
     new PromiseAsync( 1 )
-    .subscribe((a)=>{
+    .subscribe(function(a){
       expect(1).to.be.equal(a);
     })
     .start()
@@ -27,7 +27,7 @@ describe('PromiseAsync', function() {
 
   it('test new PromiseAsync( 1, 2 ) )', function() {
     new PromiseAsync( 1,2 )
-    .subscribe((a,b)=>{
+    .subscribe(function(a,b){
       expect(1).to.be.equal(a);
       expect(2).to.be.equal(b);
     })
