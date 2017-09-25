@@ -14,6 +14,11 @@ var events = require("events");
 
 */
 
+// TODO
+// .map() ?
+// .filter() ?
+// .progress() ?
+
 // 发送之前
 var START = "start";
 //进度
@@ -67,6 +72,7 @@ PromiseAsync.prototype.constructor = PromiseAsync;
  *  2. subscribe(()=>{ console.log("onComplete") })
  */
 
+//TODO can use .subscribe(fn, fn) ?
 PromiseAsync.prototype.subscribe = function(observer) {
 
   if(typeof observer === "function"){
@@ -90,6 +96,7 @@ PromiseAsync.prototype.subscribe = function(observer) {
   * parallel promise
   * .mrege( Promise.resolve("hello") )
   * @param {Promise} promise
+  * @return {this}
   */
 PromiseAsync.prototype.merge = function(promise){
 
@@ -108,16 +115,16 @@ PromiseAsync.prototype.merge = function(promise){
 
 /**
   * @param {fn} fn(a,b,c)
-  *
+  * @return {this}
 */
 PromiseAsync.prototype.flat = function(fn){
 
   if(typeof fn !== "function"){
-    throw ".flat(fn) muse be function, and return value|promise"
+    throw ".flat(fn) muse be function, and return value or promise"
   }
 
   var promiseIterator = this.promiseIterator || [this.promise];
-  
+
   this.promiseIterator = [new Promise(function(resolve, reject){
     Promise.all(promiseIterator)
     .then(function(datas){
@@ -145,6 +152,7 @@ PromiseAsync.prototype.start = function(){
     Promise.all(self.promiseIterator)
     .then(function(datas){
       self.emit(self.PROGRESS, 100);
+      //datas = [1,2,3] = to onComplete(1,2,3)
       self.emit.apply(self, [self.COMPLETE].concat(datas));
     }).catch(function(error){
       self.emit(self.PROGRESS, 100);

@@ -3,10 +3,24 @@ var expect = chai.expect;
 var should = chai.should();
 var PromiseAsync = require("../PromiseAsync");
 
+
+function mockFetch(text){
+  return new Promise(function(resolve, reject){
+    resolve({
+      json:function(){
+        return new Promise(function(resolve, reject){
+          resolve(text)
+        })
+      }
+    })
+  });
+}
+
+
 describe('PromiseAsync', function() {
 
 
-  it('test START,COMPLETE,PROGRESS,ERROR )', function() {
+  it('test START,COMPLETE,PROGRESS,ERROR', function() {
 
     var promise = new PromiseAsync( Promise.resolve(1) )
     expect("start").to.be.equal(promise.START);
@@ -45,12 +59,12 @@ describe('PromiseAsync', function() {
 
   });
 
-  it('test new PromiseAsync( Promise.reject(1) )', function() {
+  it('test new PromiseAsync( Promise.reject(1), Promise.reject(2) )', function() {
 
-    new PromiseAsync( Promise.reject(1) )
+    new PromiseAsync( Promise.reject(1),Promise.reject(2) )
     .subscribe({
-      onError:function(err){
-        expect(1).to.be.equal(err);
+      onError:function(a){
+        expect(1).to.be.equal(a);
       }
     })
     .start()
@@ -170,6 +184,63 @@ describe('PromiseAsync', function() {
   });
 
 
+  it('test .flat().merge().flat()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .flat(function(a, b){
+      return Promise.resolve( a + b );
+    })
+    .merge(Promise.resolve(5))
+    .flat(function(a, b){
+      return Promise.resolve( a + b );
+    })
+    .subscribe(function(a){
+      expect(8).to.be.equal(a);
+    })
+    .start()
+
+  });
+
+  it('test .flat() return reject', function() {
+
+    new PromiseAsync( 1 )
+    .flat(function(a, b){
+      return Promise.reject(2);
+    })
+    .merge(Promise.resolve(5))
+    .flat(function(a, b){
+      return Promise.resolve( a + b );
+    })
+    .subscribe({
+      onError:function(a){
+        expect(2).to.be.equal(a);
+      }
+    })
+    .start()
+
+  });
+
+  it('test .flat() throw error', function() {
+
+    new PromiseAsync( 1 )
+    .flat(function(a, b){
+      throw 3;
+      return Promise.reject(2);
+    })
+    .merge(Promise.resolve(5))
+    .flat(function(a, b){
+      return Promise.resolve( a + b );
+    })
+    .subscribe({
+      onError:function(a){
+        expect(3).to.be.equal(a);
+      }
+    })
+    .start()
+
+  });
+
+
   it('test .merge().merge()', function() {
 
     new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
@@ -180,6 +251,21 @@ describe('PromiseAsync', function() {
       expect(2).to.be.equal(b);
       expect(3).to.be.equal(c);
       expect(4).to.be.equal(d);
+    })
+    .start()
+
+  });
+
+
+  it('test .merge(Promise.reject(2)).merge()', function() {
+
+    new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
+    .merge(Promise.reject(3))
+    .merge(Promise.reject(4))
+    .subscribe({
+      onError:function(a){
+        expect(3).to.be.equal(a);
+      }
     })
     .start()
 
@@ -259,6 +345,63 @@ describe('PromiseAsync', function() {
     .start()
 
   });
+
+
+
+  it('test .subscribe({}).subscribe({})', function() {
+
+    var eventCount = 0;
+    new PromiseAsync( Promise.reject(1), Promise.reject(1) )
+    .subscribe({
+      onStart:function(){
+        eventCount++;
+      },
+      //目前onProgress时间始终触发2次，所以这里会加2
+      onProgress:function(){
+        eventCount++
+      },
+      onComplete:function(a,b,c,d){
+        eventCount++;
+        expect(4).to.be.equal(eventCount);
+      },
+      onError:function(){
+        eventCount++;
+        expect(4).to.be.equal(eventCount);
+      }
+    })
+    .start()
+
+  });
+
+
+  it('test link fetch() api', function() {
+
+
+
+    new PromiseAsync( mockFetch(1) )
+    .flat(function(res){
+      return res.json()
+    })
+    .subscribe(function(a){
+      expect(1).to.be.equal(a);
+    })
+    .start()
+
+
+
+
+  });
+
+  it('test link fetch() api 2', function() {
+
+    new PromiseAsync( mockFetch(2).then(function(res){ return res.json() }))
+    .subscribe(function(a){
+      expect(2).to.be.equal(a);
+    })
+    .start()
+
+  });
+
 
 
   // Promise.all([
