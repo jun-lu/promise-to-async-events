@@ -185,4 +185,18 @@ PromiseAsync.prototype.__on = function(type, fn, self){
 }
 
 
-module.exports = PromiseAsync;
+;(function (global, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['exports', 'module'], factory);
+  } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
+    factory(exports, module);
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, mod);
+    global.PromiseAsync = mod.exports;
+  }
+})(this, function (exports, module) {
+  module.exports = PromiseAsync;
+});
