@@ -26,7 +26,7 @@ describe('PromiseAsync', function() {
     expect("start").to.be.equal(promise.START);
     expect("complete").to.be.equal(promise.COMPLETE);
     expect("progress").to.be.equal(promise.PROGRESS);
-    expect("error").to.be.equal(promise.ERROR);
+    expect("__error").to.be.equal(promise.ERROR);
 
   });
 

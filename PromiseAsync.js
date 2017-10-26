@@ -26,7 +26,7 @@ var PROGRESS = "progress";
 //完成
 var COMPLETE = "complete";
 //错误
-var ERROR = "error";
+var ERROR = "__error"; //避免与 events.EventEmitter error事件重复
 
 
 
