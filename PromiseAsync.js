@@ -10,7 +10,7 @@ var events = require("events");
     |                                          |
     |                                          |---- ERROR
     |                                          |
-    |0-------------- PROGRESS --------------100|
+    |0----------------- Next ---------------100|
 
 */
 
@@ -22,7 +22,7 @@ var events = require("events");
 // 发送之前
 var START = "start";
 //进度
-var PROGRESS = "progress";
+var NEXT = "next";
 //完成
 var COMPLETE = "complete";
 //错误
@@ -47,7 +47,7 @@ function PromiseAsync( promise ){
   }
 
   this.START = START;
-  this.PROGRESS = PROGRESS;
+  this.NEXT = NEXT;
   this.COMPLETE = COMPLETE;
   this.ERROR = ERROR;
 
@@ -82,7 +82,7 @@ PromiseAsync.prototype.subscribe = function(observer) {
 
   if(typeof observer === "object"){
     observer.onStart && this.__on(this.START ,observer.onStart,observer);
-    observer.onProgress && this.__on(this.PROGRESS, observer.onProgress,observer);
+    observer.onNext && this.__on(this.NEXT, observer.onNext,observer);
     observer.onComplete && this.__on(this.COMPLETE, observer.onComplete,observer);
     observer.onError && this.__on(this.ERROR, observer.onError,observer);
     return this;
@@ -147,15 +147,12 @@ PromiseAsync.prototype.start = function(){
   if(this.promiseIterator){
     //多个promise
     self.emit(self.START);
-    self.emit(self.PROGRESS, 0);
     var iterator = this.promiseIterator;
     Promise.all(self.promiseIterator)
     .then(function(datas){
-      self.emit(self.PROGRESS, 100);
       //datas = [1,2,3] = to onComplete(1,2,3)
       self.emit.apply(self, [self.COMPLETE].concat(datas));
     }).catch(function(error){
-      self.emit(self.PROGRESS, 100);
       self.emit(self.ERROR, error);
     })
 

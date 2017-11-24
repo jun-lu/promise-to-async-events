@@ -20,12 +20,12 @@ function mockFetch(text){
 describe('PromiseAsync', function() {
 
 
-  it('test START,COMPLETE,PROGRESS,ERROR', function() {
+  it('test START,COMPLETE,NEXT,ERROR', function() {
 
     var promise = new PromiseAsync( Promise.resolve(1) )
     expect("start").to.be.equal(promise.START);
     expect("complete").to.be.equal(promise.COMPLETE);
-    expect("progress").to.be.equal(promise.PROGRESS);
+    expect("next").to.be.equal(promise.NEXT);
     expect("__error").to.be.equal(promise.ERROR);
 
   });
@@ -356,17 +356,13 @@ describe('PromiseAsync', function() {
       onStart:function(){
         eventCount++;
       },
-      //目前onProgress时间始终触发2次，所以这里会加2
-      onProgress:function(){
-        eventCount++
-      },
       onComplete:function(a,b,c,d){
         eventCount++;
-        expect(4).to.be.equal(eventCount);
+        expect(2).to.be.equal(eventCount);
       },
       onError:function(){
         eventCount++;
-        expect(4).to.be.equal(eventCount);
+        expect(2).to.be.equal(eventCount);
       }
     })
     .start()
@@ -401,6 +397,8 @@ describe('PromiseAsync', function() {
     .start()
 
   });
+
+
 
 
 
