@@ -257,6 +257,19 @@ describe('PromiseAsync', function() {
   });
 
 
+  it('test .merge().flat()', function() {
+
+    new PromiseAsync( Promise.resolve(1) )
+    .merge(Promise.resolve(3))
+    .subscribe(function(a, b){
+      expect(1).to.be.equal(a);
+      expect(3).to.be.equal(b);
+    })
+    .start()
+
+  });
+
+
   it('test .merge(Promise.reject(2)).merge()', function() {
 
     new PromiseAsync( Promise.resolve(1), Promise.resolve(2) )
@@ -268,6 +281,36 @@ describe('PromiseAsync', function() {
       }
     })
     .start()
+
+  });
+
+
+  it('test .merge(Promise.reject(1)).merge(Promise.reject(2)).toPormiseStart()', function() {
+
+    var promiseAsync = new PromiseAsync( Promise.resolve(1) ).merge(Promise.resolve(2))
+    promiseAsync.subscribe(function(a, b){
+      expect(1).to.be.equal(a);
+      expect(2).to.be.equal(b);
+    });
+
+    promiseAsync.toPromise().then(function(result){
+      expect(1).to.be.equal(result[0]);
+      expect(2).to.be.equal(result[1]);
+    })
+
+  });
+
+
+  it('test .merge(Promise.reject(1)).toPormiseStart()', function() {
+
+    var promiseAsync = new PromiseAsync( Promise.resolve(1) );//.merge(Promise.resolve(2))
+    promiseAsync.subscribe(function(a, b){
+      expect(1).to.be.equal(a);
+    });
+
+    promiseAsync.toPromise().then(function(result){
+      expect(1).to.be.equal(result);
+    })
 
   });
 

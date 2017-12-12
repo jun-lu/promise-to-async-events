@@ -100,12 +100,14 @@ PromiseAsync.prototype.subscribe = function(observer) {
   */
 PromiseAsync.prototype.merge = function(promise){
 
+  //fix Android 5.1.1 下babel打包以后 promise instanceof Promise => false 
+  //所以这里使用 promise.constructor
   if(!promise || !(promise instanceof Promise)){
     throw ".merge() must be Promise";
   }
 
   if(!this.promiseIterator){
-    this.promiseIterator = [this.promise]
+    this.promiseIterator = [this.promise];
   }
 
   this.promiseIterator.push(promise);
@@ -169,6 +171,32 @@ PromiseAsync.prototype.start = function(){
       self.emit(self.ERROR, error);
     })
   }
+}
+
+/**
+ * toPromise
+ */
+PromiseAsync.prototype.toPromise = function(){
+
+  var self = this;
+
+  return new Promise(function(resolve, reject){
+
+    self.subscribe({
+      onComplete:function(){
+        if(arguments.length > 1){
+          resolve(arguments)
+        }else{
+          resolve(arguments[0])
+        }
+      },
+      onError:reject
+    });
+
+    self.start();
+
+  });
+
 }
 
 /**

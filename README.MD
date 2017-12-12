@@ -122,6 +122,22 @@
 ````
 
 
+
+*  `toPromise()`
+
+开始执行，并且返回一个Promise对象，方便进行 await 操作
+
+````javascript
+
+    let promiseAsync = new PromiseAsync( Promise.resolve(1) )
+    .mrege(Promise.resolve(2))
+
+    let result = await promiseAsync.toPromise();
+    //result => [1,2]
+
+````
+
+
 * start()
 
 开始执行
